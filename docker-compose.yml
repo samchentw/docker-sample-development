@@ -1,0 +1,109 @@
+version: '3.7'
+
+services:
+  # web:
+  #   container_name: web
+  #   image: httpd:2.4
+  #   ports:
+  #     - "80:80"
+  #   environment: 
+  #     TZ: Asia/Taipei
+  #   networks: 
+  #     - my-pc-network
+  seq:
+    container_name: seq
+    image: "datalust/seq"
+    ports:
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+       - ./data/seq:/data
+    environment: 
+      TZ: Asia/Taipei
+      ACCEPT_EULA: "Y"
+    networks: 
+      - my-pc-network
+
+  minio:
+    container_name: minio
+    image: minio/minio
+    command:  server --address 0.0.0.0:9000 --console-address ":9001" /data
+    ports:
+    - "9000:9000"
+    - "9001:9001"
+    environment: 
+      TZ: Asia/Taipei
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "1q2w3E**"
+    volumes:
+       - ./data/minio:/data
+    networks: 
+      - my-pc-network
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+    - "6379:6379"
+    environment: 
+      TZ: Asia/Taipei
+    networks: 
+      - my-pc-network
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment: 
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "1q2w3E*"
+      TZ: Asia/Taipei
+    networks: 
+      - my-pc-network
+  
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    volumes:
+       - ./data/mongodb_data:/data/db
+    environment: 
+      TZ: Asia/Taipei
+    networks: 
+      - my-pc-network 
+
+  postgres:
+      image: postgres:alpine
+      volumes:
+        - ./data/postgresql:/var/lib/postgresql/data
+      ports:
+        - "5432:5432"
+      networks:
+          - my-pc-network
+      environment: 
+        POSTGRES_PASSWORD: "1q2w3E*"
+        # POSTGRES_HOST_AUTH_METHOD: md5
+        # POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
+        TZ: Asia/Taipei
+      # restart: unless-stopped
+      container_name: postgres
+
+  pgadmin:
+      image: dpage/pgadmin4
+      ports:
+        - "5050:80"
+      networks:
+        - my-pc-network
+      environment: 
+        PGADMIN_DEFAULT_EMAIL: dev@example.com
+        PGADMIN_DEFAULT_PASSWORD: "1q2w3E*"
+        TZ: Asia/Taipei
+      # restart: unless-stopped
+      container_name: pgadmin
+
+networks:
+  my-pc-network :
+    external: true
