@@ -38,11 +38,12 @@ data資料夾存放container資料
 |          | 5341  | Service |                 |          |
 | minio    | 9000  | Service |                 |          |
 |          | 9001  |    UI   | root            | 1q2w3E** |
-| redis    | 6379  | Service | admin           | 1q2w3E*  |
+| redis    | 6379  | Service |                 |          |
 | mongodb  | 27017 | Service |                 |          |
 | postgres | 5432  | Service | postgres        | 1q2w3E*  |
 | pgadmin  | 5050  |    UI   | dev@example.com | 1q2w3E*  |
-|          |       |         |                 |          |
+| rabbitmq |15672  |    UI   | admin           | 1q2w3E*  |
+|          | 5672  | Service |                 |          |
 
 
 
